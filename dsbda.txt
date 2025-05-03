@@ -1,0 +1,824 @@
+EXP 1
+pip install pandas
+
+
+import pandas as pd
+
+
+df = pd.read_csv(r"D:\College\TE\SEM-2\Practical\DSBDA\1\StudentsPerformance.csv")
+print(df)
+df.head(15)
+df.isnull().sum()
+print(df.describe())
+df.dtypes
+df.dropna(axis=1)
+
+
+y = df.iloc[:, 0:1]
+print(y)
+
+
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+y = le.fit_transform(y)
+print(y)
+
+
+print(df['race/ethnicity'].value_counts())
+
+
+
+EXP 2
+
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+
+import pandas as pd
+
+
+df = pd.read_csv(r"D:\College\TE\SEM-2\Practical\DSBDA\2\AcademicPerformance.csv")
+
+
+print(df)
+
+
+print(df['math score'])
+
+
+print(df['math score'].isnull())
+
+
+print(df['reading score'])
+
+
+print(df['reading score'].isnull())
+
+
+missing_values = ["n/a", "na", "--"]
+df = pd.read_csv(r"D:\College\TE\SEM-2\Practical\DSBDA\2\AcademicPerformance.csv", na_values = missing_values)
+
+
+print(df['reading score'])
+
+
+print(df['reading score'].isnull())
+
+
+dataset = [11,41,20,3,101,55,68,97,99,6]
+
+
+sorted(dataset)
+
+
+quantile1, quantile3 = np.percentile(dataset, [25,75])
+
+
+print(quantile1, quantile3)
+
+
+iqr_value = (quantile3 - quantile1)
+
+
+print(iqr_value)
+
+
+lower_bound_value = quantile1 - (1.5*iqr_value)
+
+
+upper_bound_value = quantile3 + (1.5*iqr_value)
+
+
+print(lower_bound_value, upper_bound_value)
+
+
+from datetime import date
+df['age'] = date.today().year - df['Year_Birth']
+
+
+df['Year'] = pd.DatetimeIndex(df['Dt_Admission']).year
+df['E_L'] = date.today().year - df['Year']
+
+
+df['Fees$'] = df['College_Fees'].str.replace(',', '').str.replace('$', '').str.replace('.', '').fillna(0).astype(int)
+df['Fees_M$'] = df['Fees$'].apply(lambda X:round(X/1000000))
+
+
+df.head(5)
+
+
+EXP 3
+
+import numpy
+speed = [99,86,87,88,111,86,103,87,94,78,77,85,86]
+x = numpy.mean(speed)
+print(x)
+
+
+import numpy
+speed = [99,86,87,88,111,86,103,87,94,78,77,85,86]
+x = numpy.median(speed)
+print(x)
+
+
+import numpy
+speed = [99,86,87,88,86,103,87,94,78,77,85,86]
+x = numpy.median(speed)
+print(x)
+
+
+from scipy import stats
+speed = [99,86,87,88,111,86,103,87,94,78,77,85,86]
+x = stats.mode(speed)
+print(x)
+
+
+n_num = [1, 2, 3, 4, 5]
+n = len(n_num)
+get_sum = sum(n_num)
+mean = get_sum/n
+print("Mean / Average is : " + str(mean))
+
+
+n_num = [1, 2, 3, 4, 5]
+n = len(n_num)
+n_num.sort()
+if n % 2 == 0:
+ median1 = n_num[n//2]
+ median2 = n_num[n//2-1]
+ median = (median1 + median2)/2
+else:
+ median = n_num[n//2]
+print("Median is : " + str(median))
+
+
+from collections import Counter
+n_num = [1, 2, 3, 4, 5, 5]
+n = len(n_num)
+data = Counter(n_num)
+get_mode = dict(data)
+mode = [k for k, v in get_mode.items() if v == max(list(data.values()))]
+if len(mode) == n:
+ get_mode = "No mode found"
+else:
+ get_mode = "Mode is/are : " + ', '.join(map(str,mode))
+print(get_mode)
+
+
+import pandas as pd
+df = pd.DataFrame({'A' : ['a', 'b', 'c', 'c', 'a', 'b'],
+ 'B' : [0, 1, 1, 0, 1, 0]}, dtype = "category")
+df.dtypes
+
+
+print(df)
+print(df.groupby(['A']). count().reset_index())
+
+
+import pandas as pd
+df = pd.DataFrame({'A' : ['a', 'b', 'c', 'c', 'a', 'b'],
+ 'B' : [0, 1, 1, 0, 1, 0],
+ 'C' : [7, 8, 9, 5, 3, 6]})
+df['A'] = df['A'].astype('category')
+print(df)
+print(df.groupby(['A', 'B']).mean().reset_index())
+
+
+import pandas as pd
+data = pd.read_csv(r"D:\College\TE\SEM-2\Practical\DSBDA\3\Iris.csv")
+print('Iris-setosa')
+setosa= data['Species'] == 'Iris-setosa'
+print(data[setosa].describe())
+print('\nIris-versicolor')
+versicolor= data['Species'] == 'Iris-versicolor'
+print(data[versicolor].describe())
+print('\nIris-virginica')
+virginica = data['Species'] == 'Iris-virginica'
+print (data[virginica].describe())
+
+
+EXP 4
+
+import pandas as pd
+import numpy as np
+from sklearn import linear_model
+from sklearn.model_selection import train_test_split
+
+
+from sklearn.datasets import load_boston
+boston = load_boston()
+print(boston)
+
+boston.feature_names
+
+boston.target
+
+
+x = pd.DataFrame(boston.data, columns = boston.feature_names)
+y = pd.DataFrame(boston.target)
+
+x.head(10)
+
+y.head(10)
+
+reg = linear_model.LinearRegression()
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=42)
+print(reg.coef_)
+
+y_pred = reg.predict(x_test)
+print(y_pred)
+
+
+EXP 5
+
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+
+dataset = pd.read_csv(r"D:\College\TE\SEM-2\Practical\DSBDA\5\Social_Network_Ads.csv")
+
+
+dataset.head()
+
+
+dataset.info()
+
+dataset.isnull().sum()
+
+dataset.shape
+
+x = dataset.iloc[:, [2, 3]].values
+y = dataset.iloc[:, 4].values
+
+print(x)
+
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.30, random_state = 0)
+
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+x_train = sc.fit_transform(x_train)
+x_test = sc.transform(x_test)
+
+
+from sklearn.linear_model import LogisticRegression
+classifier = LogisticRegression(random_state = 0)
+classifier.fit(x_train, y_train)
+y_pred = classifier.predict(x_test)
+
+ 	
+print(y_pred)
+
+print(y_test)
+
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+print(cm)
+
+Accuracy=(74+31)/120
+Accuracy
+
+Error_rate=(5+10)/120
+Error_rate
+
+from sklearn.metrics import precision_score, recall_score
+precision_score(y_test, y_pred)
+
+recall_score(y_test, y_pred)
+
+from sklearn.metrics import f1_score
+f1_score(y_test, y_pred)
+
+
+EXP 6
+
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+iris= pd.read_csv(r"D:\College\TE\SEM-2\Practical\DSBDA\6\Iris.csv")
+
+
+iris.head()
+
+iris['Species'].unique()
+
+iris.drop(columns="Id",inplace=True)
+
+g=sns.relplot(x='SepalLengthCm',y='SepalWidthCm',data=iris,hue='Species',style='Species')
+g.fig.set_size_inches(10,5)
+plt.show()
+
+plt.figure(figsize=(15,10))
+plt.subplot(2,2,1)
+sns.violinplot(x='Species',y='PetalLengthCm',data=iris)
+plt.subplot(2,2,2)
+sns.violinplot(x='Species',y='PetalWidthCm',data=iris)
+plt.subplot(2,2,3)
+sns.violinplot(x='Species',y='SepalLengthCm',data=iris)
+plt.subplot(2,2,4)
+sns.violinplot(x='Species',y='SepalWidthCm',data=iris)
+plt.show()
+
+plt.subplots(figsize=(10,7))
+sns.violinplot(data=iris)
+sns.swarmplot( data=iris)
+plt.show()
+
+iris.plot.area(y=['SepalLengthCm','SepalWidthCm','PetalLengthCm','PetalWidthCm'],alpha=0.4,figsize=(12, 6));	
+
+iris.corr()
+
+plt.subplots(figsize = (8,8))
+sns.heatmap(iris.corr(),annot=True,fmt="f").set_title("Corelation of attributes (petal length,width and sepal length,width) among Iris species")
+plt.show()
+
+
+X=iris.iloc[:,0:4].values
+y=iris.iloc[:,4].values
+
+
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+y = le.fit_transform(y)
+
+#Metrics
+from sklearn.metrics import make_scorer, accuracy_score,precision_score
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score ,precision_score,recall_score,f1_score
+
+#Model Select
+from sklearn.naive_bayes import GaussianNB
+
+from sklearn.model_selection import train_test_split
+
+
+#Train and Test split
+X_train,X_test,y_train,y_test=train_test_split(X,y,test_size=0.3,random_state=0)
+
+
+gaussian = GaussianNB()
+gaussian.fit(X_train, y_train)
+Y_pred = gaussian.predict(X_test)
+accuracy_nb=round(accuracy_score(y_test,Y_pred)* 100, 2)
+acc_gaussian = round(gaussian.score(X_train, y_train) * 100, 2)
+cm = confusion_matrix(y_test, Y_pred)
+accuracy = accuracy_score(y_test,Y_pred)
+precision =precision_score(y_test, Y_pred,average='micro')
+recall = recall_score(y_test, Y_pred,average='micro')
+f1 = f1_score(y_test,Y_pred,average='micro')
+print('Confusion matrix for Naive Bayes\n',cm)
+print('accuracy_Naive Bayes: %.3f' %accuracy)
+print('precision_Naive Bayes: %.3f' %precision)
+print('recall_Naive Bayes: %.3f' %recall)
+print('f1-score_Naive Bayes : %.3f' %f1)
+
+
+EXP 7
+
+pip install PyPDF2
+
+pip install python-docx
+
+
+# importing required modules
+import PyPDF2
+
+# creating a pdf file object
+pdfFileObj = open(r"D:\College\TE\SEM-2\Practical\DSBDA\7\sample1.pdf", 'rb')
+
+# creating a pdf reader object
+pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
+
+# printing number of pages in pdf file
+print(pdfReader.numPages)
+
+# creating a page object
+pageObj = pdfReader.getPage(0)
+
+# extracting text from page
+print(pageObj.extractText())
+
+# closing the pdf file object
+pdfFileObj.close()
+
+
+
+# import docx NOT python-docx
+import docx
+
+# create an instance of a word document
+doc = docx.Document()
+
+# add a heading of level 0 (largest heading)
+doc.add_heading('Heading for the document', 0)
+
+# add a paragraph and store
+# the object in a variable
+doc_para = doc.add_paragraph('Your paragraph goes here, ')
+
+# add a run i.e, style like
+# bold, italic, underline, etc.
+doc_para.add_run('hey there, bold here').bold = True
+doc_para.add_run(', and ')
+doc_para.add_run('these words are italic').italic = True
+
+# add a page break to start a new page
+doc.add_page_break()
+
+# add a heading of level 2
+doc.add_heading('Heading level 2', 2)
+
+# pictures can also be added to our word document
+# width is optional
+doc.add_picture(r"D:\College\TE\SEM-2\Practical\DSBDA\7\index.jpg")
+
+# now save the document to a location
+doc.save('new_doc')
+
+
+
+pip install nltk
+
+
+import nltk
+nltk.download()
+nltk.download('punkt')
+
+
+
+#Sentence Tokenization
+
+sentence_data = "The First sentence is about Python. The Second: about Django. You can learn Python,Django and Data Ananlysis here. "
+nltk_tokens = nltk.sent_tokenize(sentence_data)
+print (nltk_tokens)
+
+
+
+
+#Non English language Tokenization
+
+german_tokenizer = nltk.data.load('tokenizers/punkt/german.pickle')
+german_tokens=german_tokenizer.tokenize('Wie geht es Ihnen?  Gut, danke.')
+print(german_tokens)
+
+
+
+
+#Word Tokenization
+
+word_data = "It originated from the idea that there are readers who prefer learning new skills from the comforts of their drawing rooms"
+nltk_tokens = nltk.word_tokenize(word_data)
+print (nltk_tokens)
+
+
+
+
+#Word Tokenization
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize, sent_tokenize
+
+#Dummy text
+txt = "He is a boy. "\
+ "She is a girl"
+word_tokens = word_tokenize(txt)
+
+print(word_tokens)
+
+
+
+#Part of Speech (POS) tagging
+
+import nltk
+nltk.download('averaged_perceptron_tagger')
+from nltk.tokenize import word_tokenize
+text = word_tokenize("Hello welcome to the world of to learn Categorizing and POS Tagging with NLTK and Python")
+nltk.pos_tag(text)
+
+
+import nltk
+nltk.download('stopwords')
+nltk.download('averaged_perceptron_tagger')
+
+
+from nltk.corpus import stopwords
+print(stopwords.words('english'))
+
+
+#Stopwords removal from sentence
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+example_sent = """This is a sample sentence,
+ showing off the stop words filtration."""
+stop_words = set(stopwords.words('english'))
+word_tokens = word_tokenize(example_sent)
+filtered_sentence = [w for w in word_tokens if not w.lower() in stop_words]
+filtered_sentence = []
+for w in word_tokens:
+ if w not in stop_words:
+ filtered_sentence.append(w)
+print("Tokenized:", word_tokens)
+print("Stop Words Removed:", filtered_sentence)
+
+
+
+#Stopwords from input file
+import io
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+# word_tokenize accepts
+# a string as an input, not a file.
+stop_words = set(stopwords.words('english'))
+file1 = open(r"D:\College\TE\SEM-2\Practical\DSBDA\7\text.txt")
+# Use this to read file content as a stream:
+line = file1.read()
+words = line.split()
+for r in words:
+ if not r in stop_words:
+ appendFile = open('filteredtext.txt','a')
+ appendFile.write(" "+r)
+ appendFile.close()
+
+
+#Stemming
+
+import nltk
+from nltk.stem.porter import PorterStemmer
+porter_stemmer = PorterStemmer()
+
+word_data = "It vijaying meeting better vijayed vijays eats skills originated from the idea that there are readers who prefer learning new skills from the comforts of their drawing rooms"
+# First Word tokenization
+nltk_tokens = nltk.word_tokenize(word_data)
+#Next find the roots of the word
+for w in nltk_tokens:
+       print("Actual: %s  Stem: %s"  % (w,porter_stemmer.stem(w)))
+
+
+#Lemmatization
+
+import nltk
+nltk.download('wordnet')
+from nltk.stem import WordNetLemmatizer
+wordnet_lemmatizer = WordNetLemmatizer()
+
+word_data = "It studies densely is better  meeting studying vijaying vijayed vijays skills originated from the idea that there are readers who prefer learning new skills from the comforts of their drawing rooms"
+nltk_tokens = nltk.word_tokenize(word_data)
+for w in nltk_tokens:
+        print("Actual: %s  Lemma: %s"  % (w,wordnet_lemmatizer.lemmatize(w))) 
+
+
+#Expt.No.7 2nd Operation
+import pandas as pd
+import sklearn as sk
+import math
+
+first_sentence = "Data Science is the best job of the 21st century"
+second_sentence = "Machine learning is the key for data science"
+
+#split so each word have their own string
+first_sentence = first_sentence.split(" ")
+second_sentence = second_sentence.split(" ")#join them to remove common duplicate words
+total= set(first_sentence).union(set(second_sentence))
+print(total)
+
+
+#count the words
+
+wordDictA = dict.fromkeys(total, 0) 
+wordDictB = dict.fromkeys(total, 0)
+for word in first_sentence:
+    wordDictA[word]+=1
+    
+for word in second_sentence:
+    wordDictB[word]+=1
+    
+pd.DataFrame([wordDictA, wordDictB])
+
+
+
+#Compute Term Frequency(TF)
+
+def computeTF(wordDict, doc):
+    tfDict = {}
+    corpusCount = len(doc)
+    for word, count in wordDict.items():
+        tfDict[word] = count/float(corpusCount)
+    return(tfDict)
+
+#running our sentences through the tf function:
+tfFirst = computeTF(wordDictA, first_sentence)
+tfSecond = computeTF(wordDictB, second_sentence)
+
+#Converting to dataframe for visualization
+pd.DataFrame([tfFirst, tfSecond])
+
+
+
+#Compute Inverse Document Frequency(IDF)
+
+def computeIDF(docList):
+    idfDict = {}
+    N = len(docList)
+    
+    idfDict = dict.fromkeys(docList[0].keys(), 0)
+    for word, val in idfDict.items():
+        idfDict[word] = math.log10(N / (float(val) + 1))
+        
+    return(idfDict)
+
+#inputing our sentences in the log file
+idfs = computeIDF([wordDictA, wordDictB])
+
+
+
+#Compute Term Frequency(TF)
+
+def computeTF(wordDict, doc):
+    tfDict = {}
+    corpusCount = len(doc)
+    for word, count in wordDict.items():
+        tfDict[word] = count/float(corpusCount)
+    return(tfDict)
+
+#running our sentences through the tf function:
+tfFirst = computeTF(wordDictA, first_sentence)
+tfSecond = computeTF(wordDictB, second_sentence)
+
+#Converting to dataframe for visualization
+pd.DataFrame([tfFirst, tfSecond])
+
+
+
+#Compute Inverse Document Frequency(IDF)
+
+def computeIDF(docList):
+    idfDict = {}
+    N = len(docList)
+    
+    idfDict = dict.fromkeys(docList[0].keys(), 0)
+    for word, val in idfDict.items():
+        idfDict[word] = math.log10(N / (float(val) + 1))
+        
+    return(idfDict)
+
+#inputing our sentences in the log file
+idfs = computeIDF([wordDictA, wordDictB])
+
+
+#Compute Term Frequency(TF) - Inverse Document Frequency(IDF)
+
+def computeTFIDF(tfBow, idfs):
+    tfidf = {}
+    for word, val in tfBow.items():
+        tfidf[word] = val*idfs[word]
+    return(tfidf)
+
+#running our two sentences through the IDF:
+idfFirst = computeTFIDF(tfFirst, idfs)
+idfSecond = computeTFIDF(tfSecond, idfs)
+
+#putting it in a dataframe
+pd.DataFrame([idfFirst, idfSecond])
+
+
+#Compute TF-IDF
+
+#first step is to import the library
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+#for the sentence, make sure all words are lowercase or you will run #into error. for simplicity, I just made the same sentence all #lowercase
+firstV= "Data Science is the sexiest job of the 21st century"
+secondV= "machine learning is the key for data science"
+
+#calling the TfidfVectorizer
+vectorize= TfidfVectorizer()
+
+#fitting the model and passing our sentences right away:
+response= vectorize.fit_transform([firstV, secondV])
+
+print(response)
+
+
+
+EXP 8
+
+pip install seaborn
+
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+dataset = sns.load_dataset('titanic')
+dataset.head()
+
+
+sns.distplot(dataset['fare'])
+
+
+sns.distplot(dataset['fare'], kde=False)
+
+sns.jointplot(x='age', y='fare', data=dataset)
+
+
+sns.rugplot(dataset['fare'])
+
+sns.barplot(x='sex', y='age', data=dataset)
+
+
+sns.countplot(x='sex', data=dataset)
+
+sns.boxplot(x='sex', y='age', data=dataset)
+
+sns.boxplot(x='sex', y='age', data=dataset, hue="survived")
+
+sns.violinplot(x='sex', y='age', data=dataset)
+
+sns.stripplot(x='sex', y='age', data=dataset)
+
+sns.swarmplot(x='sex', y='age', data=dataset)
+
+sns.violinplot(x='sex', y='age', data=dataset)
+sns.swarmplot(x='sex', y='age', data=dataset, color='black')
+
+#Expt. No. 8 Part-2
+# histogram of fare
+titanic_hist = dataset.fare.plot.hist(bins = 40, color = 'grey')
+plt.xlabel('Fare (pounds, 1912 prices)')
+plt.show(titanic_hist)
+
+sns.distplot(dataset['fare'])
+
+
+EXP 9
+
+import pandas as pd
+import seaborn as sns
+
+data=pd.read_csv(r"D:\College\TE\SEM-2\Practical\DSBDA\10\Iris.csv")
+
+data.head()
+
+data.describe()
+
+data.info()
+
+sns.histplot(data=data, x="SepalLengthCm")
+
+sns.histplot(data=data, x="PetalLengthCm")
+
+sns.histplot(data=data, x="SepalWidthCm")
+
+sns.histplot(data=data, x="PetalWidthCm")
+
+sns.boxplot(x="SepalLengthCm", data=data)
+
+sns.boxplot(x="PetalLengthCm", data=data)
+
+sns.boxplot(x="SepalWidthCm", data=data)
+
+sns.boxplot(x="PetalWidthCm", data=data)
+
+sns.boxplot(x="PetalWidthCm", y="PetalLengthCm", data=data)
+
+sns.boxplot(x="SepalWidthCm", y="SepalLengthCm", data=data)
+
+
+EXP 10
+
+import pandas as pd
+import seaborn as sns
+
+data=pd.read_csv(r"D:\College\TE\SEM-2\Practical\DSBDA\10\Iris.csv")
+
+data.head()
+
+data.describe()
+
+data.info()
+
+
+sns.histplot(data=data, x="SepalLengthCm")
+
+sns.histplot(data=data, x="PetalLengthCm")
+
+sns.histplot(data=data, x="SepalWidthCm")
+
+sns.histplot(data=data, x="PetalWidthCm")
+
+sns.boxplot(x="SepalLengthCm", data=data)
+
+sns.boxplot(x="PetalLengthCm", data=data)
+
+sns.boxplot(x="SepalWidthCm", data=data)
+
+sns.boxplot(x="PetalWidthCm", data=data)
+
+sns.boxplot(x="PetalWidthCm", y="PetalLengthCm", data=data)
+
+sns.boxplot(x="SepalWidthCm", y="SepalLengthCm", data=data)
