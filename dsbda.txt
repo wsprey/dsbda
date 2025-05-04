@@ -204,30 +204,39 @@ import pandas as pd
 import numpy as np
 from sklearn import linear_model
 from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_diabetes
 
+# Load the diabetes dataset (similar format to Boston housing)
+diabetes = load_diabetes()
 
-from sklearn.datasets import load_boston
-boston = load_boston()
-print(boston)
+print(diabetes)
 
-boston.feature_names
+# Feature names
+print(diabetes.feature_names)
 
-boston.target
+# Target values
+print(diabetes.target)
 
+# Create DataFrames
+x = pd.DataFrame(diabetes.data, columns=diabetes.feature_names)
+y = pd.DataFrame(diabetes.target)
 
-x = pd.DataFrame(boston.data, columns = boston.feature_names)
-y = pd.DataFrame(boston.target)
+print(x.head(10))
+print(y.head(10))
 
-x.head(10)
-
-y.head(10)
-
+# Train/test split
 reg = linear_model.LinearRegression()
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.20, random_state=42)
+
+# Fit the model
+reg.fit(x_train, y_train)
+
+# Coefficients and prediction
 print(reg.coef_)
 
 y_pred = reg.predict(x_test)
 print(y_pred)
+
 
 
 EXP 5
